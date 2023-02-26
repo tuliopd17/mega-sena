@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <math.h>
 #include <time.h>
 
@@ -17,16 +16,16 @@ int main()
 
     int qtd = 0;
     int sorted_num = 0;
-    bool unique;
+    int unique = 0;
 
     printf("Qual a quantidade de jogos? ");
     scanf("%d", &qtd);
 
-    int **array = malloc(qtd * sizeof(int *));
+    int **matrix = malloc(qtd * sizeof(int *));
 
     for (int i = 0; i < qtd; i++)
     {
-        array[i] = malloc(6 * sizeof(int));
+        matrix[i] = malloc(6 * sizeof(int));
 
         for (int j = 0; j < 6; j++)
         {
@@ -34,21 +33,21 @@ int main()
             {
                 sorted_num = (rand() % 60) + 1;
 
-                unique = true;
+                unique = 1;
 
                 for (int k = 0; k < j; k++)
                 {
-                    if (array[i][k] == sorted_num)
+                    if (matrix[i][k] == sorted_num)
                     {
-                        unique = false;
+                        unique = 0;
                     }
                 }
-            } while (!unique);
+            } while (unique != 1);
 
-            array[i][j] = sorted_num;
+            matrix[i][j] = sorted_num;
         }
 
-        qsort(array[i], 6, sizeof(int), cmpfunc);
+        qsort(matrix[i], 6, sizeof(int), cmpfunc);
     }
 
     fprintf(file_out, "========== APOSTAS DA MEGA SENA ==========\n\n");
@@ -57,19 +56,19 @@ int main()
         fprintf(file_out, "Jogo %d: ", i + 1);
         for (int j = 0; j < 6; j++)
         {
-            fprintf(file_out, "%d ", array[i][j]);
+            fprintf(file_out, "%d ", matrix[i][j]);
         }
         fprintf(file_out, "\n");
     }
 
-    int best_game = rand() % qtd;
+    fprintf(file_out, "\n================== FIM ===================");
 
-    fprintf(file_out, "\n========== MELHOR JOGO ==========\n\n");
-    fprintf(file_out, "Jogo %d: ", best_game + 1);
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < qtd; i++)
     {
-        fprintf(file_out, "%d ", array[best_game][i]);
+        free(matrix[i]);
     }
+    free(matrix);
+    fclose(file_out);
 
     return 0;
 }
